@@ -2,7 +2,7 @@ from flask import Flask
 from dotenv import load_dotenv
 from connectors.mysql_connector import connection
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import text
+from models.user import User
 
 load_dotenv()
 
@@ -11,9 +11,11 @@ app = Flask(__name__)
 @app.route("/")
 def index():
 
+    # Insert data using SQLALchemy
+    NewUser = User(username="aziz", email="aziz313@gmail.com", password="1234", role="user")
     Session = sessionmaker(connection)
     with Session() as session:
-        session.execute(text("INSERT INTO user (username, email, password, role) VALUES('imamhm', 'f7hJ9@example.com', '12345', 'admin')"))
+        session.add(NewUser)
         session.commit()
 
     return "Inserted Successfully!"
