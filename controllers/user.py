@@ -3,6 +3,8 @@ from connectors.mysql_connector import connection
 from sqlalchemy.orm import sessionmaker
 from models.user import User
 
+from sqlalchemy import select
+
 from flask_login import login_user, logout_user, login_required
 
 
@@ -68,6 +70,32 @@ def login():
         return {"message": "Fail to login"}, 501
     
 
+# get login user
+@user_routes.route("/login", methods=["GET"])
+def get_login_user():
+    Session = sessionmaker(connection)
+    s = Session()
+
+    try:
+        Users = select(User)
+        result = s.execute(Users)
+        user_account = []
+
+        for row in result.scalars():
+            user_account.append({
+                "id": row.id,
+                "username": row.username,
+                "email": row.email,
+                "role": row.role
+            })
+
+        return {
+            "user_account": user_account,
+            "message": "Success to get login user"
+        }, 200
+    
+    except Exception as e:
+        return {"message": "Fail to get login user"}, 501
 #logout
 @user_routes.route("/logout", methods=["GET"])
 @login_required

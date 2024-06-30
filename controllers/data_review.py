@@ -26,7 +26,7 @@ def get_reviews():
         s.add(newReview)
         s.commit()
     except Exception as e:
-        # print(e)
+        print(e)
         s.rollback()
         return {"message": "Fail to insert"}, 501
 
