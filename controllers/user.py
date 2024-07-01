@@ -7,6 +7,8 @@ from sqlalchemy import select
 
 from flask_login import login_user, logout_user, login_required
 
+from decorators.role_checker import role_required
+
 
 
 
@@ -72,6 +74,7 @@ def login():
 
 # get login user
 @user_routes.route("/login", methods=["GET"])
+@role_required("admin")
 def get_login_user():
     Session = sessionmaker(connection)
     s = Session()

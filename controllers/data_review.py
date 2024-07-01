@@ -4,12 +4,15 @@ from sqlalchemy.orm import sessionmaker
 from models.data_review import Review
 
 from sqlalchemy import select
+from decorators.role_checker import role_required
+from flask_login import login_required
 
 
 data_review_routes = Blueprint("data_review_routes", __name__)
 
 #insert reviews
 @data_review_routes.route("/review", methods=["POST"])
+@login_required
 def get_reviews():
     Session = sessionmaker(connection)
     s = Session()
@@ -35,6 +38,7 @@ def get_reviews():
 
 #delete reviews
 @data_review_routes.route("/review/<id>", methods=["DELETE"])
+@role_required("user")
 def delete_review(id):
     Session = sessionmaker(connection)
     s = Session()
@@ -51,6 +55,7 @@ def delete_review(id):
 
 #update reviews
 @data_review_routes.route("/review/<id>", methods=["PUT"])
+@role_required("user")
 def update_review(id):
     Session = sessionmaker(connection)
     s = Session()
